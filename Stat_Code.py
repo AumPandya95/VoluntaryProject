@@ -15,16 +15,16 @@ data_source =data = pd.read_csv("D:\Python\VoluntaryWork\Data.csv",header=0, sep
 data= data.reset_index()
 data.sort_values('date', ascending=True)
 data = data[(data['albumin']>0) & (data['creatinine']>0)]
-data = data.sample(n=30)
-data['s_alb'] =data['albumin'].shift().fillna(0) #shift
-data['s_cre'] =data['creatinine'].shift().fillna(0) #shift
-data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])*100
-data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])*100
-data= data.reset_index()
+data_sam = data.sample(n=30)
+data_sam['s_alb'] =data_sam['albumin'].shift().fillna(0) #shift
+data_sam['s_cre'] =data_sam['creatinine'].shift().fillna(0) #shift
+data_sam['c_cre'] = ((data_sam['creatinine'] - data_sam['s_cre'])/data_sam['s_cre'])*100
+data_sam['c_alb'] = ((data_sam['albumin'] - data_sam['s_alb'])/data_sam['s_alb'])*100
+data_sam= data_sam.reset_index()
 result=pd.DataFrame()
 pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentageAvg','DecreaseCount', 'DecreasePresentageAvg'))
 
-for itr in range(0,len(data.index)-date_limit-1):
+for itr in range(0,len(data_sam.index)-date_limit-1):
     rbcsummary = {
            "date":data.get_value(itr,'date'),
            "type": "RBC",
@@ -33,16 +33,19 @@ for itr in range(0,len(data.index)-date_limit-1):
            "dec_count":0,
            "dec_per_avg":0
            }
+    
+#using .iat[] instead of .get_value() as the latter is deprecated and will be removed in a future release
     percentinc= percentdec=0
-    if(data.get_value(itr,'c_alb') >= increase_rate and data.get_value(itr,'c_cre') >=increase_rate):
+    if(data_sam.get_value(itr,'c_alb') >= increase_rate and data_sam.get_value(itr,'c_cre') >=increase_rate):
+        #Find a way to remove the row[0] as value of c_alb and c_creatinine is inf
         for itr1 in range(1,date_limit):
             #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
-            if(data.get_value(itr+itr1,'rbc')>data.get_value(itr+itr1-1,'rbc')):
+            if(data_sam.get_value(itr+itr1,'rbc')>data_sam.get_value(itr+itr1-1,'rbc')):
                 rbcsummary["inc_count"]+=1
-                percentinc+=((data.get_value(itr+itr1,'rbc')-data.get_value(itr+itr1-1,'rbc'))/data.get_value(itr+itr1,'rbc'))*100
+                percentinc+=((data_sam.get_value(itr+itr1,'rbc')-data_sam.get_value(itr+itr1-1,'rbc'))/data_sam.get_value(itr+itr1,'rbc'))*100
                 rbcsummary["inc_pre_avg"]=percentinc/rbcsummary["inc_count"]
-            elif(data.get_value(itr+itr1,'rbc')<data.get_value(itr+itr1-1,'rbc')):
+            elif(data_sam.get_value(itr+itr1,'rbc')<data_sam.get_value(itr+itr1-1,'rbc')):
                 rbcsummary["dec_count"]+=1
-                percentdec+=((data.get_value(itr+itr1,'rbc')-data.get_value(itr+itr1-1,'rbc'))/data.get_value(itr+itr1,'rbc'))*100
+                percentdec+=((data_sam.get_value(itr+itr1,'rbc')-data_sam.get_value(itr+itr1-1,'rbc'))/data_sam.get_value(itr+itr1,'rbc'))*100
                 rbcsummary["dec_per_avg"]=percentdec/rbcsummary["dec_count"]
         result.append(pd.DataFrame.from_dict(rbcsummary),ignore_index=True)
