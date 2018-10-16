@@ -31,17 +31,17 @@ def calc_engine(str):
     global date_limit
     global data
     global writer
-    result=pd.DataFrame(columns = ['date','type','inc_count','inc_pre_avg','dec_count','dec_per_avg'])
+    result=pd.DataFrame(columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg'])
     #pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentageAvg','DecreaseCount', 'DecreasePresentageAvg'))
     temp_list=[]
     for itr in range(0,len(data.index)-date_limit-1):
         summary = {
-               "date":data.iat[itr,1],
-               "type": "RBC",
-               "inc_count":0,
-               "inc_pre_avg":0,
-               "dec_count":0,
-               "dec_per_avg":0
+               "Date":data.iat[itr,1],
+               "Type": "RBC",
+               "IncreaseCount":0,
+               "IncreasePercentageAvg":0,
+               "DecreaseCount":0,
+               "DecreasePercentageAvg":0
                }
         percentinc= percentdec=0
         if(data.loc[itr,'c_alb'] >= increase_rate and data.loc[itr,'c_cre'] >=increase_rate):
@@ -49,17 +49,17 @@ def calc_engine(str):
             for itr1 in range(1,date_limit):
                 #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
                 if(data.loc[itr+itr1,str]>data.loc[itr+itr1-1,str]):
-                    summary["Inc_count"]+=1
+                    summary["IncreaseCount"]+=1
                     percentinc+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1,str])*100
-                    summary["Inc_pre_avg"]=percentinc/summary["Inc_count"]
+                    summary["IncreasePercentageAvg"]=percentinc/summary["IncreaseCount"]
                     #print(rbcsummary)
                 elif(data.loc[itr+itr1,str] < data.loc[itr+itr1-1,str]):
-                    summary["Dec_count"]+=1
+                    summary["DecreaseCount"]+=1
                     percentdec+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1,str])*100
-                    summary["Dec_per_avg"]=percentdec/summary["Dec_count"]
+                    summary["DecreasePercentageAvg"]=percentdec/summary["DecreaseCount"]
                     #print(rbcsummary)
             temp_list.append(summary)
-    result= (pd.DataFrame(temp_list))
+    result= (pd.DataFrame(temp_list,columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg']))
     result.to_excel(writer, sheet_name = str)
     writer.save()
     return 0
