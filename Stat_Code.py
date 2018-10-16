@@ -26,7 +26,7 @@ pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentag
 
 for itr in range(0,len(data_sam.index)-date_limit-1):
     rbcsummary = {
-           "date":data.get_value(itr,'date'),
+           "date":data.iat[itr,1],
            "type": "RBC",
            "inc_count":0,
            "inc_pre_avg":0,
@@ -36,16 +36,16 @@ for itr in range(0,len(data_sam.index)-date_limit-1):
     
 #using .iat[] instead of .get_value() as the latter is deprecated and will be removed in a future release
     percentinc= percentdec=0
-    if(data_sam.get_value(itr,'c_alb') >= increase_rate and data_sam.get_value(itr,'c_cre') >=increase_rate):
+    if(data_sam.iat[itr,10] >= increase_rate and data_sam.iat[itr,9] >=increase_rate):
         #Find a way to remove the row[0] as value of c_alb and c_creatinine is inf
         for itr1 in range(1,date_limit):
             #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
-            if(data_sam.get_value(itr+itr1,'rbc')>data_sam.get_value(itr+itr1-1,'rbc')):
+            if(data_sam.iat[itr+itr1,5]>data_sam.iat[itr+itr1-1,5]):
                 rbcsummary["inc_count"]+=1
-                percentinc+=((data_sam.get_value(itr+itr1,'rbc')-data_sam.get_value(itr+itr1-1,'rbc'))/data_sam.get_value(itr+itr1,'rbc'))*100
+                percentinc+=((data_sam.iat[itr+itr1,5]-data_sam.iat[itr+itr1-1,5])/data_sam.iat[itr+itr1,5])*100
                 rbcsummary["inc_pre_avg"]=percentinc/rbcsummary["inc_count"]
-            elif(data_sam.get_value(itr+itr1,'rbc')<data_sam.get_value(itr+itr1-1,'rbc')):
+            elif(data_sam.iat[itr+itr1,5]<data_sam.iat[itr+itr1-1,5]):
                 rbcsummary["dec_count"]+=1
-                percentdec+=((data_sam.get_value(itr+itr1,'rbc')-data_sam.get_value(itr+itr1-1,'rbc'))/data_sam.get_value(itr+itr1,'rbc'))*100
+                percentdec+=((data_sam.iat[itr+itr1,5]-data_sam.iat[itr+itr1-1,5])/data_sam.iat[itr+itr1,5])*100
                 rbcsummary["dec_per_avg"]=percentdec/rbcsummary["dec_count"]
         result.append(pd.DataFrame.from_dict(rbcsummary),ignore_index=True)
