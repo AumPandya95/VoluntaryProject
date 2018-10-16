@@ -7,6 +7,7 @@ Created on Tue Oct 16 12:40:17 2018
 
 import numpy as np
 import pandas as pd
+import openpyxl
 
 increase_rate = 0.02
 date_limit = 7
