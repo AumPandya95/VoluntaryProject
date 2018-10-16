@@ -12,10 +12,12 @@ import openpyxl
 increase_rate = 0.02
 date_limit = 7
 count = 0
+data =pd.DataFrame()
+path = r'D:/Python/VoluntaryWork/'
 
-data_source =data = pd.read_csv("D:\Python\VoluntaryWork\Data.csv",header=0, sep=",", index_col=0, parse_dates = True)
-data= data.reset_index()
-data.sort_values('date', ascending=True)
+data_source =data = pd.read_csv(path+"Data.csv",header=0, sep=",", index_col=0, parse_dates = True)
+data= data.reset_index().sort_values('date',ascending = True).reset_index(drop = True)
+#data.sort_values('date', ascending=True)
 data = data[(data['albumin']>0) & (data['creatinine']>0)]
 data_sam = data.sample(n=30)
 data_sam['s_alb'] =data_sam['albumin'].shift().fillna(0) #shift
