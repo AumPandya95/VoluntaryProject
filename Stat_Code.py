@@ -23,9 +23,11 @@ def calc_engine(string):
     result=pd.DataFrame(columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg'])
     #pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentageAvg','DecreaseCount', 'DecreasePresentageAvg'))
     temp_list=[]
+    data = data[(data[string] != 0)]
     for itr in range(1,len(data.index)+1-(date_limit-1)):
+        
         summary = {
-               "Date":data.iat[itr,1],
+               "Date":data.loc[itr,'date'],
                "Type": "RBC",
                "IncreaseCount":0,
                "IncreasePercentageAvg":0,
@@ -48,6 +50,9 @@ def calc_engine(string):
                     percentdec+=((data.loc[itr+itr1,string]-data.loc[itr+itr1-1,string])/data.loc[itr+itr1-1,string])*100
                     summary["DecreasePercentageAvg"]=percentdec/summary["DecreaseCount"]
                     #print(rbcsummary)
+                    
+        else:
+            continue
             temp_list.append(summary)
     result= (pd.DataFrame(temp_list,columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg']))
     result.to_excel(writer, sheet_name = str)
@@ -64,7 +69,7 @@ data['s_alb'] =data['albumin'].shift().fillna(0) #shift
 data['s_cre'] =data['creatinine'].shift().fillna(0) #shift
 data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])*100
 data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])*100
-#data= data.reset_index()    This is not needed
+data= data.reset_index(drop = True)
 o_path = path+'Output.xlsx'
 
 writer = pd.ExcelWriter(o_path, engine = 'openpyxl')
