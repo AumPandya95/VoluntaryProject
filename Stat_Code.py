@@ -83,6 +83,11 @@ calc_engine('rbc')
 calc_engine('wbc')
 calc_engine('platelets')
 writer.close()
+
+workbook=openpyxl.load_workbook('D:/Python/VoluntaryWork/Output.xlsx')
+sheet=workbook.get_sheet_by_name('Sheet')
+workbook.remove_sheet(sheet)
+workbook.save('D:/Python/VoluntaryWork/Output.xlsx')
 # =============================================================================
 #         percentinc= percentdec=0
 #         if(data.iat[itr,10] >= increase_rate and data.iat[itr,9] >=increase_rate):
