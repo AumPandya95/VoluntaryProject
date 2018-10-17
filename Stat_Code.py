@@ -40,12 +40,12 @@ def calc_engine(str):
                 #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
                 if(data.loc[itr+itr1,str]>data.loc[itr+itr1-1,str]):
                     summary["IncreaseCount"]+=1
-                    percentinc+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1,str])*100
+                    percentinc+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1-1,str])*100
                     summary["IncreasePercentageAvg"]=percentinc/summary["IncreaseCount"]
                     #print(rbcsummary)
                 elif(data.loc[itr+itr1,str] < data.loc[itr+itr1-1,str]):
                     summary["DecreaseCount"]+=1
-                    percentdec+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1,str])*100
+                    percentdec+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1-1,str])*100
                     summary["DecreasePercentageAvg"]=percentdec/summary["DecreaseCount"]
                     #print(rbcsummary)
             temp_list.append(summary)
