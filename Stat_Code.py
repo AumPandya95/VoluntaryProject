@@ -30,7 +30,7 @@ def calc_engine(string):
         
         summary = {
                "Date":data.loc[itr,'date'],
-               "Type": "RBC",
+               "Type": string,
                "IncreaseCount":0,
                "IncreasePercentageAvg":0,
                "DecreaseCount":0,
@@ -53,12 +53,15 @@ def calc_engine(string):
                     summary["DecreasePercentageAvg"]=percentdec/summary["DecreaseCount"]
                     #print(rbcsummary)
                     
+            temp_list.append(summary)
+            
         else:
             continue
-            temp_list.append(summary)
+        
     result= (pd.DataFrame(temp_list,columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg']))
     result.to_excel(writer, sheet_name = string)
     writer.save()
+
     return 0
     #using .loc[] instead of .get_value() as the latter is deprecated and will be removed in a future release
     
@@ -69,8 +72,8 @@ data = data[(data['albumin']>0) & (data['creatinine']>0)]
 #data_sam = data.sample(n=30)
 data['s_alb'] =data['albumin'].shift().fillna(0) #shift
 data['s_cre'] =data['creatinine'].shift().fillna(0) #shift
-data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])*100
-data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])*100
+data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])#*100
+data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])#*100
 
 o_path = path+'Output.xlsx'
 
