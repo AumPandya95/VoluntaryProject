@@ -23,7 +23,7 @@ def calc_engine(str):
     result=pd.DataFrame(columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg'])
     #pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentageAvg','DecreaseCount', 'DecreasePresentageAvg'))
     temp_list=[]
-    for itr in range(0,len(data.index)-date_limit-1):
+    for itr in range(1,len(data.index)-date_limit-1):
         summary = {
                "Date":data.iat[itr,1],
                "Type": "RBC",
@@ -33,8 +33,9 @@ def calc_engine(str):
                "DecreasePercentageAvg":0
                }
         percentinc= percentdec=0
-        if(data.loc[itr,'c_alb'] >= increase_rate & data.loc[itr,'c_cre'] >=increase_rate):
-            count += 1
+        if((data.loc[itr,'c_alb'] >= increase_rate) & (data.loc[itr,'c_cre'] >= increase_rate)):
+            
+            #count += 1
             for itr1 in range(1,date_limit):
                 #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
                 if(data.loc[itr+itr1,str]>data.loc[itr+itr1-1,str]):
