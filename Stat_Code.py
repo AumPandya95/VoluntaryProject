@@ -15,7 +15,7 @@ count = 0
 data =pd.DataFrame()
 path = r'D:/Python/VoluntaryWork/'
 
-def calc_engine(str):
+def calc_engine(string):
     global increase_rate
     global date_limit
     global data
@@ -38,14 +38,14 @@ def calc_engine(str):
             #count += 1
             for itr1 in range(1,date_limit):
                 #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
-                if(data.loc[itr+itr1,str]>data.loc[itr+itr1-1,str]):
+                if(data.loc[itr+itr1,string]>data.loc[itr+itr1-1,string]):
                     summary["IncreaseCount"]+=1
-                    percentinc+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1-1,str])*100
+                    percentinc+=((data.loc[itr+itr1,string]-data.loc[itr+itr1-1,string])/data.loc[itr+itr1-1,string])*100
                     summary["IncreasePercentageAvg"]=percentinc/summary["IncreaseCount"]
                     #print(rbcsummary)
-                elif(data.loc[itr+itr1,str] < data.loc[itr+itr1-1,str]):
+                elif(data.loc[itr+itr1,string] < data.loc[itr+itr1-1,string]):
                     summary["DecreaseCount"]+=1
-                    percentdec+=((data.loc[itr+itr1,str]-data.loc[itr+itr1-1,str])/data.loc[itr+itr1-1,str])*100
+                    percentdec+=((data.loc[itr+itr1,string]-data.loc[itr+itr1-1,string])/data.loc[itr+itr1-1,string])*100
                     summary["DecreasePercentageAvg"]=percentdec/summary["DecreaseCount"]
                     #print(rbcsummary)
             temp_list.append(summary)
