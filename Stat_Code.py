@@ -5,10 +5,8 @@ Created on Tue Oct 16 12:40:17 2018
 @author: Aum_Pandya
 """
 
-import numpy as np
 import pandas as pd
 import openpyxl
-import math
 
 increase_rate = 0.02
 date_limit = 7
@@ -61,7 +59,6 @@ def calc_engine(string):
     result= (pd.DataFrame(temp_list,columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg']))
     result.to_excel(writer, sheet_name = string)
     writer.save()
-
     return 0
     #using .loc[] instead of .get_value() as the latter is deprecated and will be removed in a future release
     
@@ -76,7 +73,6 @@ data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])#*100
 data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])#*100
 
 o_path = path+'Output.xlsx'
-
 writer = pd.ExcelWriter(o_path, engine = 'openpyxl')
 writer.book = openpyxl.Workbook()
 calc_engine('rbc')
