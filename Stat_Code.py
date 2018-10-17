@@ -15,17 +15,6 @@ count = 0
 data =pd.DataFrame()
 path = r'D:/Python/VoluntaryWork/'
 
-data_source =data = pd.read_csv(path+"Data.csv",header=0, sep=",", index_col=0, parse_dates = True)
-data= data.reset_index().sort_values('date',ascending = True).reset_index(drop = True)
-#data.sort_values('date', ascending=True)
-data = data[(data['albumin']>0) & (data['creatinine']>0)]
-#data_sam = data.sample(n=30)
-data['s_alb'] =data['albumin'].shift().fillna(0) #shift
-data['s_cre'] =data['creatinine'].shift().fillna(0) #shift
-data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])*100
-data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])*100
-#data= data.reset_index()
-
 def calc_engine(str):
     global increase_rate
     global date_limit
@@ -44,7 +33,7 @@ def calc_engine(str):
                "DecreasePercentageAvg":0
                }
         percentinc= percentdec=0
-        if(data.loc[itr,'c_alb'] >= increase_rate and data.loc[itr,'c_cre'] >=increase_rate):
+        if(data.loc[itr,'c_alb'] >= increase_rate & data.loc[itr,'c_cre'] >=increase_rate):
             count += 1
             for itr1 in range(1,date_limit):
                 #print(itr," ",itr1," ",data.get_value(itr+itr1,'rbc')," ",data.get_value(itr+itr1-1,'rbc'))
@@ -64,6 +53,25 @@ def calc_engine(str):
     writer.save()
     return 0
     #using .loc[] instead of .get_value() as the latter is deprecated and will be removed in a future release
+    
+data_source =data = pd.read_csv(path+"Data.csv",header=0, sep=",", index_col=0, parse_dates = True)
+data= data.reset_index().sort_values('date',ascending = True).reset_index(drop = True)
+#data.sort_values('date', ascending=True)
+data = data[(data['albumin']>0) & (data['creatinine']>0)]
+#data_sam = data.sample(n=30)
+data['s_alb'] =data['albumin'].shift().fillna(0) #shift
+data['s_cre'] =data['creatinine'].shift().fillna(0) #shift
+data['c_cre'] = ((data['creatinine'] - data['s_cre'])/data['s_cre'])*100
+data['c_alb'] = ((data['albumin'] - data['s_alb'])/data['s_alb'])*100
+#data= data.reset_index()    This is not needed
+o_path = path+'Output.xlsx'
+
+writer = pd.ExcelWriter(o_path, engine = 'openpyxl')
+writer.book = openpyxl.Workbook()
+calc_engine('rbc')
+calc_engine('wbc')
+calc_engine('platelets')
+writer.close()
 # =============================================================================
 #         percentinc= percentdec=0
 #         if(data.iat[itr,10] >= increase_rate and data.iat[itr,9] >=increase_rate):
