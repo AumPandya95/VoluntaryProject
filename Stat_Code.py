@@ -23,7 +23,7 @@ def calc_engine(str):
     result=pd.DataFrame(columns=['Date','Type' ,'IncreaseCount', 'IncreasePercentageAvg','DecreaseCount', 'DecreasePercentageAvg'])
     #pd.DataFrame(result, columns=('Date','Type' ,'IncreaseCount', 'IncreasePresentageAvg','DecreaseCount', 'DecreasePresentageAvg'))
     temp_list=[]
-    for itr in range(1,len(data.index)-date_limit-1):
+    for itr in range(1,len(data.index)+1-(date_limit-1)):
         summary = {
                "Date":data.iat[itr,1],
                "Type": "RBC",
